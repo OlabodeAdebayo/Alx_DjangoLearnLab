@@ -7,9 +7,10 @@ from .models import Library
 def list_books(request):
     # Retrieves all books and renders a template displaying the list.
     books = Book.objects.all()
-    context = {'list_books': books}
+    response_text = "\n".join([f"{book.title} by {book.author.name}" for book in books])
 
-    return render(request, 'relationship_app/list_books.html', context)
+
+    return HttpResponse(response_text, content_type="text/plain")
 
 class LibraryDetailView(Detailview):
     model = Library
