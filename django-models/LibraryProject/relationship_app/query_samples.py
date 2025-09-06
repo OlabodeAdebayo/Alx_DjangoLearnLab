@@ -31,3 +31,10 @@ def retrieve_librarian_for_library(library_name):
         return librarian.name
     except (Library.DoesNotExist, Librarian.DoesNotExist):
         return None
+
+
+if __name__ == "__main__":
+    # Example usage (adjust names as per your DB records)
+    print("Books by George Orwell:", query_books_by_author("George Orwell"))
+    print("Books in Central Library:", list_books_in_library("Central Library"))
+    print("Librarian for Central Library:", retrieve_librarian_for_library("Central Library"))
