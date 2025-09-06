@@ -1,40 +1,50 @@
 import os
 import django
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'LibraryProject.settings')
+# Configure Django settings for standalone script
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_models.settings')
 django.setup()
 
 from relationship_app.models import Author, Book, Library, Librarian
 
-def query_books_by_author(author_name):
-    try:
-        author = Author.objects.get(name=author_name)
-        books = Book.objects.filter(author=author)
-        return [book.title for book in books]
-    except Author.DoesNotExist:
-        return []
+def sample_data():
+    # Create author and books
+    jane = Author.objects.create(name='Jane Austen')
+    pride = Book.objects.create(title='Pride and Prejudice', author=jane)
+    emma = Book.objects.create(title='Emma', author=jane)
 
-def list_books_in_library(library_name):
+    # Create library and assign books
+    central = Library.objects.create(name='Central Library')
+    central.books.set([pride, emma])
 
-    try:
-        library = Library.objects.get(name=library_name)
-        books = library.books.all()
-        return [book.title for book in books]
-    except Library.DoesNotExist:
-        return []
+    # Create librarian for that library
+    Librarian.objects.create(name='Alice', library=central)
 
-def retrieve_librarian_for_library(library_name):
-    
-    try:
-        library = Library.objects.get(name=library_name)
-        librarian = Librarian.objects.get(library=library)
-        return librarian.name
-    except (Library.DoesNotExist, Librarian.DoesNotExist):
-        return None
+    return jane, central
 
+def query_all_books_by_author(author_name):
+    author = Author.objects.get(name=author_name)
+    return author.books.all()
 
-if __name__ == "__main__":
-    # Example usage (adjust names as per your DB records)
-    print("Books by George Orwell:", query_books_by_author("George Orwell"))
-    print("Books in Central Library:", list_books_in_library("Central Library"))
-    print("Librarian for Central Library:", retrieve_librarian_for_library("Central Library"))
+def query_all_books_in_library(library_name):
+    library = Library.objects.get(name=library_name)
+    return library.books.all()
+
+def query_librarian_for_library(library_name):
+    library = Library.objects.get(name=library_name)
+    return library.librarian
+
+if __name__ == '__main__':
+    jane, central = sample_data()
+
+    print("Books by Jane Austen:")
+    for book in query_all_books_by_author('Jane Austen'):
+        print('-', book.title)
+
+    print("\nBooks in Central Library:")
+    for book in query_all_books_in_library('Central Library'):
+        print('-', book.title)
+
+    print("\nLibrarian at Central Library:")
+    print('-', query_librarian_for_library('Central Library').name)
+
