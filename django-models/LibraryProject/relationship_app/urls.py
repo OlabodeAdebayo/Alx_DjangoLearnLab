@@ -12,7 +12,7 @@ urlpatterns = [
     path('librarian-view/', views.librarian_view, name='librarian_view'),
     path('ember-view/', views.member_view, name='member_view'),
 
-    path('register/', register_view, name='register'),
-    path('login/', login_view, name='login'),
-    path('logout/', logout_view, name='logout'),
+    path('register/', views.register_view, name='register'),
+    path('login/', LoginView.as_view(template_name='relationship_app/login.html'), name='login'),
+    path('logout/', LogoutView.as_view(template_name='relationship_app/logout.html'), name='logout'),
 ]
