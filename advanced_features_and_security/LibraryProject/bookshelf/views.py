@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Book
-from .forms import BookSearchForm, ExampleForm
+from .forms import ExampleForm, BookSearchForm
 from django.utils.decorators import decorator_from_middleware
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 
