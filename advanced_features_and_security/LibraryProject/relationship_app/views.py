@@ -6,6 +6,15 @@ from django.contrib.auth.decorators import permission_required, login_required, 
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView
 from .models import Library, Book, UserProfile
 from .forms import BookForm
+from django.utils.decorators import decorator_from_middleware
+from django.views.decorators.clickjacking import xframe_options_sameorigin
+
+def add_csp_header(get_response):
+    def middleware(request):
+        response = get_response(request)
+        response['Content-Security-Policy'] = "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com"
+        return response
+    return middleware
 
 # Reister View
 def register_view(request):

@@ -1,6 +1,15 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
+from django.utils.decorators import decorator_from_middleware
+from django.views.decorators.clickjacking import xframe_options_sameorigin
+
+def add_csp_header(get_response):
+    def middleware(request):
+        response = get_response(request)
+        response['Content-Security-Policy'] = "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com"
+        return response
+    return middleware
 
 def register_view(request):
     if request.method == "POST":
