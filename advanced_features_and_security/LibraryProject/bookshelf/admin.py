@@ -1,11 +1,11 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Book, CustomUser
+from .models import Book
 
 
 # Extend UserAdmin to include custom fields for CustomUser
-class CustomUserAdmin(UserAdmin):
-    model = CustomUser
+class UserAdmin(UserAdmin):
+    model = UserAdmin
     list_display = ("username", "email", "date_of_birth", "is_staff", "is_active")
     list_filter = ("is_staff", "is_active", "date_of_birth")
     search_fields = ("username", "email")
@@ -17,9 +17,6 @@ class CustomUserAdmin(UserAdmin):
         (None, {"fields": ("date_of_birth", "profile_photo")}),
     )
 
-
-# Register CustomUser
-admin.site.register(CustomUser, CustomUserAdmin)
 
 
 # Keep your existing Book admin

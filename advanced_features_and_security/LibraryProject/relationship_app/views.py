@@ -3,10 +3,11 @@ from django.views.generic.detail import DetailView
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import permission_required, login_required, user_passes_test
+from django.views.generic import CreateView, UpdateView, DeleteView, ListView
 from .models import Library, Book, UserProfile
 from .forms import BookForm
 
-# Register View
+# Reister View
 def register_view(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
