@@ -1,5 +1,6 @@
 from rest_framework import generics, permissions
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
 from .models import Book
 from .serializers import BookSerializer
 
@@ -75,3 +76,30 @@ class BookDeleteView(generics.DestroyAPIView):
     serializer_class = BookSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+class BookListCreateView(generics.ListCreateAPIView):
+    """
+    List all books or create a new one.
+    Supports:
+      - Filtering by title, author__name, publication_year
+      - Searching by title and author name
+      - Ordering by title or publication_year
+    """
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+
+    # Add DRF filter backends
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter,
+    ]
+
+    # Filtering options
+    filterset_fields = ['title', 'author__name', 'publication_year']
+
+    # Search options (partial matches)
+    search_fields = ['title', 'author__name']
+
+    # Ordering options
+    ordering_fields = ['title', 'publication_year']
+    ordering = ['title']  # default ordering
