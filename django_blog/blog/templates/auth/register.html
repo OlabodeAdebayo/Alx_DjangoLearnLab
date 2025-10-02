@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
 <h2>Register</h2>
 <form method="POST">
@@ -8,4 +9,3 @@
 </form>
 <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
 {% endblock %}
-
