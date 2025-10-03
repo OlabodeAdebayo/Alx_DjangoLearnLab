@@ -1,0 +1,12 @@
+{# templates/blog/post_form.html #}
+{% extends "base.html" %}
+{% block content %}
+  <h1>{% if object %}Edit Post{% else %}New Post{% endif %}</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">{% if object %}Update{% else %}Publish{% endif %}</button>
+  </form>
+  <p><a href="{% url 'post-list' %}">Back to posts</a></p>
+{% endblock %}
+

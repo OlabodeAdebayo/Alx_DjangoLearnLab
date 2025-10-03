@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 class Post(models.Model):
     #Blog post model representing a single articl.
@@ -11,3 +12,7 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+     def get_absolute_url(self):
+        # Useful for generic CreateView/UpdateView redirecting to detail
+        return reverse("post-detail", kwargs={"pk": self.pk})
