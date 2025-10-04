@@ -32,4 +32,10 @@ urlpatterns = [
     # Edit and delete a comment (identified by comment PK)
     path('comments/<int:pk>/edit/', CommentUpdateView.as_view(), name='comment-update'),
     path('comments/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment-delete'),
-]
+
+     path('posts/<int:post_pk>/comments/new/', CommentCreateView.as_view(), name='comment-create-alias'),
+
+    # Edit and delete a comment (identified by comment PK)
+    path('comments/<int:pk>/edit/', CommentUpdateView.as_view(), name='comment-update-alias'),
+    path('comments/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment-delete-alias'),
+    ]
