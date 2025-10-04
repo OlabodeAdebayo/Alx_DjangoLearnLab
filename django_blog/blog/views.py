@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.decorators import login_required
@@ -9,6 +9,7 @@ from django.views.generic import (
 )
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
+from django.db.models import Q
 from .models import Post, Comment, Tag
 from .forms import PostForm, CommentForm
 
@@ -152,18 +153,18 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         comment = self.get_object()
         return self.request.user == comment.author
 
-def search_posts(request):
+def search_view(request):
     query = request.GET.get("q")
-    results = Post.objects.all()
+    results = []
+
     if query:
-        results = results.filter(
-            Q(title__icontains=query) |
+        results = Post.objects.filter(
+            Q(title__icontains=query) | 
             Q(content__icontains=query) |
             Q(tags__name__icontains=query)
-        ).distinct()
+        ).distinct()  # avoid duplicates when joining tags
+
     return render(request, "search_results.html", {"results": results, "query": query})
-
-
 def posts_by_tag(request, tag_name):
     tag = Tag.objects.get(name=tag_name)
     posts = tag.posts.all()
