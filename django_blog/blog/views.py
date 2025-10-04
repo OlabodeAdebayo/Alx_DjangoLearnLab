@@ -12,6 +12,7 @@ from django.urls import reverse_lazy
 from django.db.models import Q
 from .models import Post, Comment, Tag
 from .forms import PostForm, CommentForm
+from taggit.models import Tag
 
 # --- Extend UserCreationForm for Registration ---
 class CustomUserCreationForm(UserCreationForm):
@@ -169,3 +170,18 @@ def posts_by_tag(request, tag_name):
     tag = Tag.objects.get(name=tag_name)
     posts = tag.posts.all()
     return render(request, "posts_by_tag.html", {"tag": tag, "posts": posts})
+
+class PostByTagListView(ListView):
+    model = Post
+    template_name = "posts_by_tag.html"
+    context_object_name = "posts"
+
+    def get_queryset(self):
+        # get the tag object by slug
+        self.tag = get_object_or_404(Tag, slug=self.kwargs.get("tag_slug"))
+        return Post.objects.filter(tags__in=[self.tag])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["tag"] = self.tag
+        return context
