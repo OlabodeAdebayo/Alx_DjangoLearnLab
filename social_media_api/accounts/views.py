@@ -40,6 +40,12 @@ class LoginView(generics.GenericAPIView):
             })
         return Response({'error': 'Invalid credentials'}, status=400)
 
+class UserListView(generics.ListAPIView):
+
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
 class FollowUserView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
